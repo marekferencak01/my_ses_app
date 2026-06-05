@@ -57,6 +57,8 @@ entity SESHeader : managed {
                             and poItem.POitem   = POitem;
         items         : Composition of many SESItem
                             on items.SESno = $self.SESno;
+        attachments   : Composition of many Attachments
+                            on attachments.SESno = $self.SESno;
 }
 
 // ----------------------------------------------------------------------------
@@ -70,6 +72,22 @@ entity SESItem : managed {
         quantity      : Decimal(13,3) @title: 'Quantity';
         sesHeader     : Association to SESHeader
                             on sesHeader.SESno = SESno;
+}
+
+// ----------------------------------------------------------------------------
+// Entity: Attachments  (Binary attachments linked to a Service Entry Sheet)
+// ----------------------------------------------------------------------------
+entity Attachments : managed {
+    key ID          : UUID              @Core.Computed: true   @title: 'Attachment ID';
+        SESno       : String(10)                               @title: 'Service Entry Sheet Number';
+        description : String(255)                              @title: 'Description';
+        attachType  : String(4)                                @title: 'Attachment Type';
+        content     : LargeBinary       @Core.MediaType: mediaType
+                                                               @title: 'Content';
+        mediaType   : String(255)       @Core.IsMediaType: true
+                                                               @title: 'Media Type';
+        sesHeader   : Association to SESHeader
+                          on sesHeader.SESno = SESno;
 }
 
 // ----------------------------------------------------------------------------

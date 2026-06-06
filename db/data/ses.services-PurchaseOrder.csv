@@ -1,6 +1,6 @@
-POnumber,vendor,vendorName,shortText,startDate,endDate,ers,finalInvoice,deliveryComplete,purchasingOrg,companyCode,currency,creationDate,status
-4500000001,R430383371,Siemens AG,IT Infrastructure Services,2024-01-01,2024-12-31,false,false,false,1000,1000,EUR,2024-01-15,1
-4500000002,R430383371,Siemens AG,Network Maintenance Services,2024-02-01,2024-12-31,false,false,false,1000,1000,EUR,2024-02-01,1
-4500000003,R430383371,Siemens AG,Software Development Support,2024-03-01,2025-03-31,false,false,false,1000,2000,EUR,2024-03-10,1
-4500000004,RPS4997423,SAP SE,Cloud Platform Services,2024-01-15,2024-12-31,false,false,false,2000,1000,EUR,2024-01-20,1
-4500000005,RPS4997423,SAP SE,Consulting and Implementation,2024-04-01,2025-03-31,false,false,false,2000,2000,USD,2024-04-05,1
+POnumber,POitem,vendor,vendorName,shortText,startDate,endDate,ers,finalInvoice,deliveryComplete,purchasingOrg,companyCode,plant,materialGroup,currency,creationDate,status
+4500000001,00010,R430383371,Siemens AG,IT Infrastructure Services,2024-01-01,2024-12-31,false,false,false,1000,1000,1000,D001,EUR,2024-01-15,1
+4500000002,00010,R430383371,Siemens AG,Network Maintenance Services,2024-02-01,2024-12-31,false,false,false,1000,1000,1000,D003,EUR,2024-02-01,1
+4500000003,00010,R430383371,Siemens AG,Software Development Support,2024-03-01,2025-03-31,false,false,false,1000,2000,1000,D004,EUR,2024-03-10,1
+4500000004,00010,RPS4997423,SAP SE,Cloud Platform Services,2024-01-15,2024-12-31,false,false,false,2000,1000,1000,D006,EUR,2024-01-20,1
+4500000005,00010,RPS4997423,SAP SE,Consulting and Implementation,2024-04-01,2025-03-31,false,false,false,2000,2000,1000,D008,USD,2024-04-05,1

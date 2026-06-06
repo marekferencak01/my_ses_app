@@ -1,37 +1,33 @@
 using SESService from './ses-service';
 
 // ============================================================================
-// PurchaseOrder — Filter Bar, Presentation Variant, Line Item
+// PurchaseOrder — Filter Bar, Presentation Variant, Line Item, Facets
 // ============================================================================
 
 annotate SESService.PurchaseOrder with @(
-
-    UI.SelectionFields: [ vendor, POnumber, companyCode, purchasingOrg ],
-
-    UI.SelectionVariant: {
-        SelectOptions: [{
-            PropertyName: vendor,
-            Ranges       : []
-        }]
-    },
-
+    UI.SelectionFields: [vendor, POnumber, companyCode, purchasingOrg],
     UI.PresentationVariant: {
-        RequestAtLeast : [ vendor ],
-        SortOrder      : [{ Property: creationDate, Descending: true }],
-        Visualizations : [ '@UI.LineItem' ]
+        RequestAtLeast: [vendor],
+        Visualizations: ['@UI.LineItem']
     },
-
     UI.LineItem: [
         { Value: POnumber,      Label: 'PO Number'      },
+        { Value: POitem,        Label: 'PO Item'        },
         { Value: vendorName,    Label: 'Vendor Name'    },
         { Value: shortText,     Label: 'Short Text'     },
         { Value: startDate,     Label: 'Start Date'     },
         { Value: endDate,       Label: 'End Date'       },
         { Value: currency,      Label: 'Currency'       },
         { Value: creationDate,  Label: 'Creation Date'  },
-        { Value: status,        Label: 'Status'         },
         { Value: companyCode,   Label: 'Company Code'   },
-        { Value: purchasingOrg, Label: 'Purch. Org.'   }
+        { Value: purchasingOrg, Label: 'Purch. Org.'    }
+    ],
+    UI.Facets: [
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Target : 'serviceEntrySheets/@UI.LineItem',
+            Label  : 'Service Entry Sheets'
+        }
     ]
 );
 
@@ -225,31 +221,6 @@ annotate SESService.SESHeader with {
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
                     ValueListProperty : 'vendorName'
-                }
-            ]
-        }
-    );
-}
-
-// SESHeader.POitem → PurchaseOrderItem filtered by POnumber
-annotate SESService.SESHeader with {
-    POitem @(
-        Common.ValueList: {
-            CollectionPath : 'PurchaseOrderItem',
-            Parameters     : [
-                {
-                    $Type             : 'Common.ValueListParameterOut',
-                    LocalDataProperty : POitem,
-                    ValueListProperty : 'POitem'
-                },
-                {
-                    $Type             : 'Common.ValueListParameterIn',
-                    LocalDataProperty : POnumber,
-                    ValueListProperty : 'POnumber'
-                },
-                {
-                    $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'shortText'
                 }
             ]
         }

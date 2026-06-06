@@ -51,25 +51,25 @@
         "routing": {
             "routes": [
                 {
-                    "name"    : "PurchaseOrderListRoute",
-                    "target"  : "PurchaseOrderListTarget",
+                    "name"    : "PurchaseOrderList",
+                    "target"  : "PurchaseOrderList",
                     "pattern" : ":?query:"
                 },
                 {
-                    "name"    : "PurchaseOrderDetailsRoute",
-                    "target"  : "PurchaseOrderDetailsTarget",
-                    "pattern" : "PurchaseOrder({key}):?query:"
+                    "name"    : "PurchaseOrderDetails",
+                    "target"  : "PurchaseOrderDetails",
+                    "pattern" : "PurchaseOrder(POnumber={POnumber},POitem={POitem}):?query:"
                 },
                 {
-                    "name"    : "SESHeaderDetailsRoute",
-                    "target"  : "SESHeaderDetailsTarget",
-                    "pattern" : "PurchaseOrder({key})/items({key2})/serviceEntrySheets({key3}):?query:"
+                    "name"    : "SESHeaderDetails",
+                    "target"  : "SESHeaderDetails",
+                    "pattern" : "PurchaseOrder(POnumber={POnumber},POitem={POitem})/serviceEntrySheets({SESno}):?query:"
                 }
             ],
             "targets": {
-                "PurchaseOrderListTarget": {
+                "PurchaseOrderList": {
                     "type" : "Component",
-                    "id"   : "PurchaseOrderListTarget",
+                    "id"   : "PurchaseOrderList",
                     "name" : "sap.fe.templates.ListReport",
                     "options": {
                         "settings": {
@@ -77,38 +77,34 @@
                             "initialLoad" : false,
                             "navigation"  : {
                                 "PurchaseOrder": {
-                                    "detail": {
-                                        "route": "PurchaseOrderDetailsRoute"
-                                    }
+                                    "detail": { "route": "PurchaseOrderDetails" }
                                 }
                             }
                         }
                     }
                 },
-                "PurchaseOrderDetailsTarget": {
+                "PurchaseOrderDetails": {
                     "type" : "Component",
-                    "id"   : "PurchaseOrderDetailsTarget",
+                    "id"   : "PurchaseOrderDetails",
                     "name" : "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings": {
                             "contextPath" : "/PurchaseOrder",
                             "navigation"  : {
-                                "items": {
-                                    "detail": {
-                                        "route": "SESHeaderDetailsRoute"
-                                    }
+                                "serviceEntrySheets": {
+                                    "detail": { "route": "SESHeaderDetails" }
                                 }
                             }
                         }
                     }
                 },
-                "SESHeaderDetailsTarget": {
+                "SESHeaderDetails": {
                     "type" : "Component",
-                    "id"   : "SESHeaderDetailsTarget",
+                    "id"   : "SESHeaderDetails",
                     "name" : "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings": {
-                            "contextPath": "/PurchaseOrder/items/serviceEntrySheets"
+                            "contextPath" : "/PurchaseOrder/serviceEntrySheets"
                         }
                     }
                 }

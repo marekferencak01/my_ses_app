@@ -1,0 +1,17 @@
+{
+  "name": "ses.app",
+  "version": "1.0.0",
+  "description": "SAP Fiori Elements — Service Entry Sheet",
+  "private": true,
+  "scripts": {
+    "start": "ui5 serve --port 8080"
+  },
+  "devDependencies": {
+    "@sap/ux-ui5-tooling": "*"
+  },
+  "ui5": {
+    "dependencies": [
+      "@sap/ux-ui5-tooling"
+    ]
+  }
+}

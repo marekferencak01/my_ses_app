@@ -1,0 +1,122 @@
+{
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "ses.app",
+        "type": "application",
+        "title": "Service Entry Sheet",
+        "description": "Manage Service Entry Sheets against Purchase Orders",
+        "applicationVersion": { "version": "1.0.0" },
+        "dataSources": {
+            "SESService": {
+                "uri": "/ses/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "fullWidth": true,
+        "deviceTypes": { "desktop": true, "tablet": true, "phone": false }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.120.0",
+            "libs": {
+                "sap.m"            : {},
+                "sap.ui.core"      : {},
+                "sap.fe.templates" : {}
+            }
+        },
+        "models": {
+            "": {
+                "dataSource" : "SESService",
+                "preload"    : true,
+                "settings": {
+                    "synchronizationMode" : "None",
+                    "operationMode"       : "Server",
+                    "autoExpandSelect"    : true,
+                    "earlyRequests"       : true,
+                    "groupId"             : "$direct"
+                }
+            }
+        },
+        "routing": {
+            "routes": [
+                {
+                    "name"    : "PurchaseOrderListRoute",
+                    "target"  : "PurchaseOrderListTarget",
+                    "pattern" : ":?query:"
+                },
+                {
+                    "name"    : "PurchaseOrderDetailsRoute",
+                    "target"  : "PurchaseOrderDetailsTarget",
+                    "pattern" : "PurchaseOrder({key}):?query:"
+                },
+                {
+                    "name"    : "SESHeaderDetailsRoute",
+                    "target"  : "SESHeaderDetailsTarget",
+                    "pattern" : "PurchaseOrder({key})/items({key2})/serviceEntrySheets({key3}):?query:"
+                }
+            ],
+            "targets": {
+                "PurchaseOrderListTarget": {
+                    "type" : "Component",
+                    "id"   : "PurchaseOrderListTarget",
+                    "name" : "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "contextPath" : "/PurchaseOrder",
+                            "initialLoad" : false,
+                            "navigation"  : {
+                                "PurchaseOrder": {
+                                    "detail": {
+                                        "route": "PurchaseOrderDetailsRoute"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "PurchaseOrderDetailsTarget": {
+                    "type" : "Component",
+                    "id"   : "PurchaseOrderDetailsTarget",
+                    "name" : "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "contextPath" : "/PurchaseOrder",
+                            "navigation"  : {
+                                "items": {
+                                    "detail": {
+                                        "route": "SESHeaderDetailsRoute"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "SESHeaderDetailsTarget": {
+                    "type" : "Component",
+                    "id"   : "SESHeaderDetailsTarget",
+                    "name" : "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "contextPath": "/PurchaseOrder/items/serviceEntrySheets"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "contentDensities": {
+        "compact": true,
+        "cozy"   : true
+    }
+}

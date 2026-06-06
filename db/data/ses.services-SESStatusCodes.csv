@@ -1,0 +1,6 @@
+code,name,descr
+N,New,New service entry sheet - not yet submitted for approval
+A,Approved,Released and approved by purchasing manager
+R,Rejected,Rejected by approver - requires revision
+I,Invoiced,Invoice has been created for this service entry
+C,Cancelled,Document has been cancelled

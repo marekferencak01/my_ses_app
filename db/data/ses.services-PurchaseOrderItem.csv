@@ -1,2 +1,13 @@
-POnumber,POitem,plant,materialGroup
-4500000001,00010,1000,SRV_GROUP
+POnumber,POitem,plant,materialGroup,shortText
+4500000001,00010,1000,D001,Server Hardware Installation
+4500000001,00020,1000,D001,Network Equipment Setup
+4500000001,00030,1200,D002,Software License Management
+4500000002,00010,1000,D003,Network Cabling and Infrastructure
+4500000002,00020,2000,D003,Wireless Access Points Installation
+4500000003,00010,1000,D004,Frontend Development Services
+4500000003,00020,1000,D004,Backend API Development
+4500000003,00030,1500,D005,Quality Assurance and Testing
+4500000004,00010,1000,D006,SAP BTP Configuration
+4500000004,00020,2000,D007,Integration Services
+4500000005,00010,1000,D008,Business Process Consulting
+4500000005,00020,1000,D008,Change Management Support

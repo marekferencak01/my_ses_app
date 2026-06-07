@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Service Entry Sheet</title>
     <script id="sap-ui-bootstrap"
-        src="resources/sap-ui-core.js"
+        src="/resources/sap-ui-core.js"
         data-sap-ui-theme="sap_horizon"
         data-sap-ui-compatVersion="edge"
         data-sap-ui-async="true"
         data-sap-ui-frameOptions="trusted"
-        data-sap-ui-resourceroots='{"ses.app": "./"}'
-        data-sap-ui-oninit="module:sap/ui/core/ComponentSupport">
+        data-sap-ui-resourceroots='{"ses.app": "/ses-app/webapp"}'
+        data-sap-ui-oninit="module:sap/fe/core/AppStart"
+        data-sap-ui-manifest="/ses-app/webapp/manifest.json">
     </script>
 </head>
 <body class="sapUiBody sapUiSizeCozy">
-    <div data-sap-ui-component
-         data-name="ses.app"
-         data-id="container"
-         data-settings='{"id": "ses.app"}'
-         data-handle-validation="true">
-    </div>
+    <div id="content"></div>
 </body>
 </html>

@@ -6,9 +6,8 @@ using { ses.services as db } from '../db/schema';
 service SESService @(path: '/ses') {
 
     // -----------------------------------------------------------------------
-    // Reference data (read-only)
+    // Reference data — capabilities controlled via annotations.cds
     // -----------------------------------------------------------------------
-    @readonly
     entity PurchaseOrder  as projection on db.PurchaseOrder;
 
     @readonly

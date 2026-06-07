@@ -39,6 +39,21 @@ annotate SESService.PurchaseOrder with {
     );
 }
 
+// PO itself is read-only; SES navigation allows full CUD
+annotate SESService.PurchaseOrder with @(
+    Capabilities.InsertRestrictions     : { Insertable : false },
+    Capabilities.UpdateRestrictions     : { Updatable  : false },
+    Capabilities.DeleteRestrictions     : { Deletable  : false },
+    Capabilities.NavigationRestrictions : {
+        RestrictedProperties : [{
+            NavigationProperty : serviceEntrySheets,
+            InsertRestrictions : { Insertable : true },
+            UpdateRestrictions : { Updatable  : true },
+            DeleteRestrictions : { Deletable  : true }
+        }]
+    }
+);
+
 // ============================================================================
 // SESHeader — Line Item + Object Page Facets
 // ============================================================================
@@ -58,9 +73,9 @@ annotate SESService.SESHeader with @(
         { Value: status_code,  Label: 'Status'        }
     ],
 
-    UI.FieldGroup #HeaderLeft: {
-        Label : 'SES Header',
-        Data  : [
+    UI.FieldGroup #Header: {
+        Label: 'SES Header',
+        Data: [
             { Value: SESno,          Label: 'SES Number'      },
             { Value: POnumber,       Label: 'PO Number'       },
             { Value: POitem,         Label: 'PO Item'         },
@@ -70,62 +85,50 @@ annotate SESService.SESHeader with @(
         ]
     },
 
-    UI.FieldGroup #HeaderRight: {
-        Label : 'Dates & Values',
-        Data  : [
-            { Value: date,             Label: 'Date From'         },
-            { Value: dateTo,           Label: 'Date To'           },
-            { Value: creationDate,     Label: 'Creation Date'     },
-            { Value: transmissionDate, Label: 'Transmission Date' },
-            { Value: bookingDate,      Label: 'Booking Date'      },
-            { Value: totalValue,       Label: 'Total Value'       },
-            { Value: totalQuantity,    Label: 'Total Quantity'    },
-            { Value: currency,         Label: 'Currency'          }
+    UI.FieldGroup #Dates: {
+        Label: 'Dates and Values',
+        Data: [
+            { Value: date,          Label: 'Date From'      },
+            { Value: dateTo,        Label: 'Date To'        },
+            { Value: creationDate,  Label: 'Creation Date'  },
+            { Value: totalValue,    Label: 'Total Value'    },
+            { Value: totalQuantity, Label: 'Total Quantity' },
+            { Value: currency,      Label: 'Currency'       }
         ]
     },
 
-    UI.FieldGroup #HeaderExtra: {
-        Label : 'Additional Info',
-        Data  : [
-            { Value: approver,         Label: 'Approver'          },
-            { Value: storageLocation,  Label: 'Storage Location'  },
-            { Value: barcode,          Label: 'Barcode'           }
-        ]
-    },
-
-    UI.FieldGroup #Longtext: {
-        Label : 'Long Text',
-        Data  : [
-            { Value: longtext, Label: 'Long Text' }
+    UI.FieldGroup #Additional: {
+        Label: 'Additional Info',
+        Data: [
+            { Value: approver,        Label: 'Approver'         },
+            { Value: storageLocation, Label: 'Storage Location' },
+            { Value: barcode,         Label: 'Barcode'          },
+            { Value: longtext,        Label: 'Long Text'        }
         ]
     },
 
     UI.Facets: [
         {
             $Type  : 'UI.CollectionFacet',
-            Label  : 'General',
+            Label  : 'SES Header',
+            ID     : 'SESHeaderCollection',
             Facets : [
                 {
                     $Type  : 'UI.ReferenceFacet',
-                    Target : '@UI.FieldGroup#HeaderLeft',
-                    Label  : 'SES Header'
+                    Target : '@UI.FieldGroup#Header',
+                    Label  : 'Header Data'
                 },
                 {
                     $Type  : 'UI.ReferenceFacet',
-                    Target : '@UI.FieldGroup#HeaderRight',
-                    Label  : 'Dates & Values'
+                    Target : '@UI.FieldGroup#Dates',
+                    Label  : 'Dates and Values'
                 }
             ]
         },
         {
             $Type  : 'UI.ReferenceFacet',
-            Target : '@UI.FieldGroup#HeaderExtra',
+            Target : '@UI.FieldGroup#Additional',
             Label  : 'Additional Info'
-        },
-        {
-            $Type  : 'UI.ReferenceFacet',
-            Target : '@UI.FieldGroup#Longtext',
-            Label  : 'Long Text'
         },
         {
             $Type  : 'UI.ReferenceFacet',

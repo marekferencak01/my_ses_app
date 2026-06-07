@@ -4,31 +4,34 @@
   "description": "A simple CAP project.",
   "dependencies": {
     "@sap/cds": "^9",
+    "@sap/cds-fiori": "^2.3.0",
     "express": "^4"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2",
-    "@sap/cds-fiori": "^2.3.0",
     "@sap/ux-ui5-tooling": "^1.25.0"
   },
   "scripts": {
     "start": "cds-serve",
-    "start:ui": "ui5 serve --port 8080"
+    "start:ui": "cd app/ses-app && ui5 serve --port 8090"
   },
   "ui5": {
     "dependencies": [
       "@sap/ux-ui5-tooling"
     ]
   },
-  "cds": {
+"cds": {
     "server": {
-      "port": 4004
+        "port": 4004
+    },
+    "requires": {
+        "middlewares": true
     },
     "[development]": {
-      "server": {
-        "cors": true
-      }
+        "server": {
+            "cors": true
+        }
     }
-  },
+},
   "private": true
 }

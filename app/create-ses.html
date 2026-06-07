@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Service Entry Sheet</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: '72', Arial, Helvetica, sans-serif;
+            background: #f5f6f7;
+            color: #32363a;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #0070f2;
+            color: #fff;
+            padding: 0 1.5rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,.15);
+        }
+
+        header h1 {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: .01em;
+        }
+
+        header .back-btn-header {
+            margin-left: auto;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.4);
+            color: #fff;
+            padding: .3rem .8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: .875rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+        header .back-btn-header:hover { background: rgba(255,255,255,.25); }
+
+        main {
+            max-width: 720px;
+            margin: 2rem auto;
+            padding: 0 1rem 2rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #0070f2;
+            color: #fff;
+            padding: .875rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .card-body { padding: 1.5rem; }
+
+        .section-title {
+            font-size: .8125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #6a6d70;
+            margin-bottom: .875rem;
+            padding-bottom: .375rem;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .875rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .form-group { display: flex; flex-direction: column; gap: .25rem; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        label {
+            font-size: .8125rem;
+            font-weight: 600;
+            color: #32363a;
+        }
+
+        label .required { color: #bb0000; margin-left: 2px; }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: .4375rem .625rem;
+            border: 1px solid #89919a;
+            border-radius: 4px;
+            font-size: .875rem;
+            color: #32363a;
+            background: #fff;
+            transition: border-color .15s, box-shadow .15s;
+            height: 2.25rem;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #0070f2;
+            box-shadow: 0 0 0 2px rgba(0,112,242,.2);
+        }
+
+        input.invalid { border-color: #bb0000; }
+
+        .error-msg {
+            font-size: .75rem;
+            color: #bb0000;
+            display: none;
+        }
+
+        .form-group.has-error .error-msg { display: block; }
+        .form-group.has-error input,
+        .form-group.has-error select { border-color: #bb0000; }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: .75rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .btn {
+            padding: .5rem 1.25rem;
+            border-radius: 4px;
+            font-size: .875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            transition: background .15s, border-color .15s;
+        }
+
+        .btn-primary { background: #0070f2; color: #fff; border-color: #0070f2; }
+        .btn-primary:hover { background: #0064d9; border-color: #0064d9; }
+        .btn-primary:disabled { background: #89919a; border-color: #89919a; cursor: not-allowed; }
+
+        .btn-secondary { background: #fff; color: #0070f2; border-color: #0070f2; }
+        .btn-secondary:hover { background: #e8f3ff; }
+
+        /* Toast / banner messages */
+        .banner {
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            display: none;
+            align-items: flex-start;
+            gap: .75rem;
+            font-size: .875rem;
+            line-height: 1.4;
+        }
+
+        .banner.show { display: flex; }
+
+        .banner-success {
+            background: #f1faf1;
+            border: 1px solid #107e3e;
+            color: #107e3e;
+        }
+
+        .banner-error {
+            background: #fef7f7;
+            border: 1px solid #bb0000;
+            color: #bb0000;
+        }
+
+        .banner-icon { font-size: 1.125rem; flex-shrink: 0; }
+
+        .banner-body { flex: 1; }
+        .banner-body strong { display: block; margin-bottom: .25rem; }
+
+        .spinner {
+            width: 1rem; height: 1rem;
+            border: 2px solid rgba(255,255,255,.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .6s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<header>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="16" height="16" rx="2" fill="rgba(255,255,255,.25)"/>
+        <path d="M6 7h8M6 10h8M6 13h5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <h1>Create Service Entry Sheet</h1>
+    <a href="javascript:history.back()" class="back-btn-header">&#8592; Back</a>
+</header>
+
+<main>
+
+    <!-- Success banner -->
+    <div id="successBanner" class="banner banner-success" role="alert">
+        <span class="banner-icon">&#10003;</span>
+        <div class="banner-body">
+            <strong>SES created successfully</strong>
+            <span id="successDetail"></span>
+        </div>
+    </div>
+
+    <!-- Error banner -->
+    <div id="errorBanner" class="banner banner-error" role="alert">
+        <span class="banner-icon">&#9888;</span>
+        <div class="banner-body">
+            <strong>Failed to create SES</strong>
+            <span id="errorDetail"></span>
+        </div>
+    </div>
+
+    <div class="card" id="formCard">
+        <div class="card-header">New Service Entry Sheet</div>
+        <div class="card-body">
+
+            <form id="sesForm" novalidate>
+
+                <p class="section-title">Header Information</p>
+
+                <div class="form-grid">
+
+                    <div class="form-group" id="grp-SESno">
+                        <label for="SESno">SES Number <span class="required">*</span></label>
+                        <input type="text" id="SESno" name="SESno" maxlength="10" placeholder="e.g. SES0000001" required />
+                        <span class="error-msg">SES Number is required.</span>
+                    </div>
+
+                    <div class="form-group" id="grp-shortText">
+                        <label for="shortText">Short Text <span class="required">*</span></label>
+                        <input type="text" id="shortText" name="shortText" maxlength="60" placeholder="Brief description" required />
+                        <span class="error-msg">Short Text is required.</span>
+                    </div>
+
+                    <div class="form-group" id="grp-POnumber">
+                        <label for="POnumber">PO Number <span class="required">*</span></label>
+                        <input type="text" id="POnumber" name="POnumber" maxlength="10" placeholder="e.g. 4500000001" required />
+                        <span class="error-msg">PO Number is required.</span>
+                    </div>
+
+                    <div class="form-group" id="grp-POitem">
+                        <label for="POitem">PO Item <span class="required">*</span></label>
+                        <input type="text" id="POitem" name="POitem" maxlength="5" placeholder="e.g. 00010" required />
+                        <span class="error-msg">PO Item is required.</span>
+                    </div>
+
+                    <div class="form-group" id="grp-externalNumber">
+                        <label for="externalNumber">External Number</label>
+                        <input type="text" id="externalNumber" name="externalNumber" maxlength="20" placeholder="Optional" />
+                    </div>
+
+                    <div class="form-group" id="grp-status">
+                        <label for="status_code">Status</label>
+                        <select id="status_code" name="status_code">
+                            <option value="N">N — New</option>
+                            <option value="A">A — Approved</option>
+                            <option value="R">R — Rejected</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <p class="section-title">Dates &amp; Finance</p>
+
+                <div class="form-grid">
+
+                    <div class="form-group" id="grp-date">
+                        <label for="date">Date From</label>
+                        <input type="date" id="date" name="date" />
+                    </div>
+
+                    <div class="form-group" id="grp-dateTo">
+                        <label for="dateTo">Date To</label>
+                        <input type="date" id="dateTo" name="dateTo" />
+                    </div>
+
+                    <div class="form-group" id="grp-currency">
+                        <label for="currency">Currency</label>
+                        <input type="text" id="currency" name="currency" maxlength="3" value="EUR" placeholder="EUR" />
+                    </div>
+
+                    <div class="form-group" id="grp-approver">
+                        <label for="approver">Approver</label>
+                        <input type="text" id="approver" name="approver" maxlength="12" placeholder="User ID" />
+                    </div>
+
+                </div>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-secondary" onclick="history.back()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                        <div class="spinner" id="spinner"></div>
+                        Save
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Shown after success -->
+    <div id="successActions" style="display:none; text-align:center; margin-top:1.5rem;">
+        <button class="btn btn-secondary" onclick="history.back()">&#8592; Go Back</button>
+    </div>
+
+</main>
+
+<script>
+(function () {
+    const params = new URLSearchParams(window.location.search);
+
+    // Pre-fill PO fields from URL params
+    const poNum  = params.get('POnumber') || params.get('PONumber') || '';
+    const poItem = params.get('POitem')   || params.get('POItem')   || '';
+
+    if (poNum)  document.getElementById('POnumber').value = poNum;
+    if (poItem) document.getElementById('POitem').value   = poItem;
+
+    // ── Validation ──────────────────────────────────────────────────────────
+
+    function validateField(id) {
+        const input = document.getElementById(id);
+        const group = document.getElementById('grp-' + id);
+        if (!group) return true;
+        const required = input && input.hasAttribute('required');
+        const empty    = input && !input.value.trim();
+        if (required && empty) {
+            group.classList.add('has-error');
+            return false;
+        }
+        group.classList.remove('has-error');
+        return true;
+    }
+
+    ['SESno', 'POnumber', 'POitem', 'shortText'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('blur', () => validateField(id));
+    });
+
+    function validateAll() {
+        const required = ['SESno', 'POnumber', 'POitem', 'shortText'];
+        return required.map(validateField).every(Boolean);
+    }
+
+    // ── Build payload ────────────────────────────────────────────────────────
+
+    function val(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+    }
+
+    function buildPayload() {
+        const payload = {
+            SESno:     val('SESno'),
+            POnumber:  val('POnumber'),
+            POitem:    val('POitem'),
+            shortText: val('shortText'),
+            status_code: val('status_code') || 'N'
+        };
+
+        const optionals = {
+            externalNumber: val('externalNumber'),
+            date:           val('date'),
+            dateTo:         val('dateTo'),
+            currency:       val('currency') || 'EUR',
+            approver:       val('approver')
+        };
+
+        for (const [k, v] of Object.entries(optionals)) {
+            if (v) payload[k] = v;
+        }
+
+        return payload;
+    }
+
+    // ── Submit ───────────────────────────────────────────────────────────────
+
+    document.getElementById('sesForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        hideBanners();
+
+        if (!validateAll()) return;
+
+        const poNum  = val('POnumber');
+        const poItem = val('POitem');
+        const url    = `/ses/PurchaseOrder(POnumber='${encodeURIComponent(poNum)}',POitem='${encodeURIComponent(poItem)}')/serviceEntrySheets`;
+        const payload = buildPayload();
+
+        const saveBtn = document.getElementById('saveBtn');
+        const spinner = document.getElementById('spinner');
+        saveBtn.disabled = true;
+        spinner.style.display = 'block';
+
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                const data = await res.json().catch(() => ({}));
+                showSuccess(data.SESno || payload.SESno);
+            } else {
+                const err = await res.json().catch(() => ({}));
+                const msg = err?.error?.message || err?.message || `HTTP ${res.status} ${res.statusText}`;
+                showError(msg);
+            }
+        } catch (err) {
+            showError(err.message || 'Network error — check that the server is running.');
+        } finally {
+            saveBtn.disabled = false;
+            spinner.style.display = 'none';
+        }
+    });
+
+    // ── Banners ──────────────────────────────────────────────────────────────
+
+    function hideBanners() {
+        document.getElementById('successBanner').classList.remove('show');
+        document.getElementById('errorBanner').classList.remove('show');
+    }
+
+    function showSuccess(sesNo) {
+        document.getElementById('successDetail').textContent = sesNo ? `SES ${sesNo} has been created.` : '';
+        document.getElementById('successBanner').classList.add('show');
+        document.getElementById('formCard').style.display = 'none';
+        document.getElementById('successActions').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showError(msg) {
+        document.getElementById('errorDetail').textContent = msg;
+        document.getElementById('errorBanner').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+})();
+</script>
+
+</body>
+</html>

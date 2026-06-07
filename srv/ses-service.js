@@ -21,6 +21,15 @@ module.exports = (srv) => {
     });
 
     // =========================================================================
+    // SESHeader: set creationDate to today when not provided
+    // =========================================================================
+    srv.before('CREATE', SESHeader, (req) => {
+        if (!req.data.creationDate) {
+            req.data.creationDate = new Date().toISOString().split('T')[0];
+        }
+    });
+
+    // =========================================================================
     // SESItem: auto-compute value = price * quantity before write (if not given)
     // =========================================================================
     srv.before(['CREATE', 'UPDATE'], SESItem, (req) => {
